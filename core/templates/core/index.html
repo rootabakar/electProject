@@ -1,0 +1,49 @@
+{% extends 'base_admin.html' %}
+
+
+{% block titre %}
+	ADMIN | ACCEUIL
+{% endblock %}
+
+{% block main %}
+
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Dashboard</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+
+            <div class="row">
+            {% if reclamations %}
+                {% for reclamation in reclamations %}
+                    <div class="w-25">
+                        <div class="card">
+                            <div class="card-body">
+                                <span>Reclamation : {{ reclamation.id }}</span><br>
+                                <span>Nom : {{ reclamation.etudiant.nom }}</span><br>
+                                <span>Prenom : {{ reclamation.etudiant.prenom }}</span><br>
+                                <span>Preuve : <a href="/etudiant/media/{{ reclamation.preuve }}" target="_blank">fichier-{{ reclamation.id }}</a></span><br>
+                                <form action="{% url 'reclamation' reclamation.id %}" method="post">
+                                    {% csrf_token %}
+                                    <label for="exampleSelect">Etat</label>
+                                    <select name="valeur" class="form-select" id="exampleSelect">
+                                        <option selected>En cours</option>
+                                        <option value="Accepter">Accepter</option>
+                                        <option value="Refuser">Refuser</option>
+                                    </select>
+                                    <button class="btn btn-primary mt-3" type="submit">Valider</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <span class="display-1">Il y'a aucune reclamation </span>
+            {% endif %}
+            </div>
+        </div>
+    </main>
+
+
+{% endblock %}

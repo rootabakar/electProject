@@ -1,0 +1,47 @@
+{% extends 'base_admin.html' %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block titre %}
+	ADMIN | INSCRIPTION
+{% endblock %}
+
+{% block main %}
+    <main class="container-fluid">
+        <div class="container-fluid">
+            <div class="p-3 w-100 container-fluid">
+                <h2>Liste des utilisateurs</h2>
+                <ol class="breadcrumb mb-3">
+                    <li class="breadcrumb-item active">Utilisateur</li>
+                </ol>
+                <a class="btn btn-primary mb-3" href="{% url 'creation_utilisateur' %}">AJOUTER UN USER</a>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.first_name }}</td>
+                                <td>{{ user.last_name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    <a href="{% url 'detail_utilisateur' user.id %}">Détails</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}
+
+
+

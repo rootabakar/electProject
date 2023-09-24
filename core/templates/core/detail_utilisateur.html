@@ -1,0 +1,57 @@
+{% extends 'base_admin.html' %}
+
+
+{% block main %}
+    <div class="d-flex container-fluid">
+        <main class="p-4 w-25">
+            <h1>Detail</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active"><a href="{% url 'gestion_utilisateur' %}">Utilisateur</a> / Detail</li>
+            </ol>
+            <a href="" class="btn btn-primary mt-3 mb-3">Reinitialiser le passwd</a><br>
+            <strong>Prenom :</strong>
+            <p>{{ user.first_name }}</p>
+            <strong>Nom :</strong>
+            <p>{{ user.last_name }}</p>
+            <strong>Email :</strong>
+            <p>{{ user.email }}</p>
+            <strong>Derniere connexion :</strong>
+            <p>{{ user.last_login }}</p>
+        </main>
+        <div class="w-75 p-4 mt-5 pt-5">
+            <h2>Reclamations</h2>
+            {% if reclamations %}
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Motif</th>
+                        <th>Cours</th>
+                        <th>Date de Création</th>
+                        <th>État</th>
+                        <th>Preuve</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for reclamation in reclamations %}
+                        <tr>
+                            <td>{{ reclamation.motif }}</td>
+                            <td>{{ reclamation.cours }}</td>
+                            <td>{{ reclamation.dateDeCreation }}</td>
+                            <td>
+                                <div class="bg-info text-white p-2">
+                                    {{ reclamation.etat }}
+                                </div>
+                            </td>
+                            <td>
+                                <a href="/etudiant/media/{{ reclamation.preuve }}" target="_blank">ficher-{{ reclamation.id }}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <span class="display-3">Il y'a aucune reclamation pour cet etudiant</span>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

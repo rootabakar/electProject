@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block titre %}
+	AJOUTER
+{% endblock %}
+
+
+{% block main %}
+    <div class="container p-5">
+        <h2>Ajouter une reclamation</h2>
+        {% if done %}
+        	<div class="alert alert-success">
+                <span>{{ done }}</span>
+            </div>
+        {% endif %}
+        {% if err %}
+        	<div class="alert alert-danger">
+                <span>{{ err }}</span>
+            </div>
+        {% endif %}
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Motif</label>
+              <input type="text" name="motif" class="form-control" id="exampleFormControlInput1" placeholder="Motif">
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Cours</label>
+              <input type="text" name="cours" class="form-control" id="exampleFormControlInput1" placeholder="Cours">
+            </div>
+            <!--<div class="mb-3">
+                <label class="form-label" for="">Heure</label>
+                <select class="form-select" name="heure" aria-label="Default select example">
+                  <option selected>Choisir l'heure </option>
+                  <option value="08:00 - 10:00">08:00 - 10:00</option>
+                  <option value="08:00 - 12:00">08:00 - 12:00</option>
+                  <option value="Toute la journee">Toute la journee</option>
+                </select>
+            </div> -->
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Preuve</label>
+              <input type="file" name="preuve" class="form-control" id="exampleFormControlInput1">
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Ajouter</button>
+        </form>
+    </div>
+
+{% endblock %}

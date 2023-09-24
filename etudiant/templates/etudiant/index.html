@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+
+{% block titre %}
+	ACCEUIL
+{% endblock %}
+
+
+{% block main %}
+
+
+    <div class="container p-4">
+        {% if done_sup %}
+        	<alert class="alert-success">{{ done_sup }}</alert>
+        {% endif %}
+        <h2>Liste des reclamations</h2>
+        <a href="{% url 'ajouter' %}" class="btn btn-primary mt-2 mb-2">Creer</a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Motif</th>
+                    <th>Cours</th>
+                    <th>Date de Création</th>
+                    <th>État</th>
+                    <th>Preuve</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reclamation in reclamations %}
+                    <tr>
+                        <td>{{ reclamation.motif }}</td>
+                        <td>{{ reclamation.cours }}</td>
+                        <td>{{ reclamation.dateDeCreation }}</td>
+                        <td>
+                            <div class="bg-info text-white p-2">
+                                {{ reclamation.etat }}
+                            </div>
+                        </td>
+                        <td>
+                            <a href="media/{{ reclamation.preuve }}" target="_blank">ficher-{{ reclamation.id }}</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'supprimer' reclamation.id %}" class="btn btn-danger">Supprimer</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock %}

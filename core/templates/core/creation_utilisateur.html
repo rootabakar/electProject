@@ -1,0 +1,30 @@
+{% extends 'base_admin.html' %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block main %}
+	 <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Creation des utilisateurs</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active"><a href="{% url 'gestion_utilisateur' %}">Utilisateur</a> / Creation</li>
+            </ol>
+            {% if err %}
+                <div class="alert alert-danger">
+                    <span>{{ err }}</span>
+                </div>
+            {% endif %}
+            {% if done %}
+                <div class="alert alert-success">
+                    <span>{{ done }}</span>
+                </div>
+            {% endif %}
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form | crispy }}
+                <button class="btn btn-success mt-3" type="submit">Ajouter</button>
+            </form>
+
+        </div>
+    </main>
+{% endblock %}
