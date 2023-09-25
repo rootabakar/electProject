@@ -22,14 +22,15 @@
         {% endif %}
         <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="mb-3">
+            {{ form | crispy }}
+             <!--<div class="mb-3">
               <label for="exampleFormControlInput1" class="form-label">Motif</label>
               <input type="text" name="motif" class="form-control" id="exampleFormControlInput1" placeholder="Motif">
             </div>
             <div class="mb-3">
               <label for="exampleFormControlInput1" class="form-label">Cours</label>
               <input type="text" name="cours" class="form-control" id="exampleFormControlInput1" placeholder="Cours">
-            </div>
+            </div> -->
             <!--<div class="mb-3">
                 <label class="form-label" for="">Heure</label>
                 <select class="form-select" name="heure" aria-label="Default select example">
@@ -39,10 +40,10 @@
                   <option value="Toute la journee">Toute la journee</option>
                 </select>
             </div> -->
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <label for="exampleFormControlInput1" class="form-label">Preuve</label>
               <input type="file" name="preuve" class="form-control" id="exampleFormControlInput1">
-            </div>
+            </div>-->
             <button type="submit" class="btn btn-primary mt-2">Ajouter</button>
         </form>
     </div>

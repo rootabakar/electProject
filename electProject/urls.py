@@ -20,7 +20,9 @@ from core.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', prinpical, name="principal"),
     path('connexion/', connexion, name="connexion"),
+    path('deconnexion/', deconnexion, name="deconnexion"),
     path('controller/', include('core.urls')),
     path('etudiant/', include('etudiant.urls')),
 ]

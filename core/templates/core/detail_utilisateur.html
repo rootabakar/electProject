@@ -37,11 +37,11 @@
                             <td>{{ reclamation.motif }}</td>
                             <td>{{ reclamation.cours }}</td>
                             <td>{{ reclamation.dateDeCreation }}</td>
-                            <td>
-                                <div class="bg-info text-white p-2">
-                                    {{ reclamation.etat }}
-                                </div>
-                            </td>
+                            <td class="{% if reclamation.etat == 'En cours' %}bg-warning{% elif reclamation.etat == 'Accepter' %}bg-success{% elif reclamation.etat == 'Refuser' %}bg-danger{% endif %}">
+                            <div class="container">
+                                {{ reclamation.etat }}
+                            </div>
+                        </td>
                             <td>
                                 <a href="/etudiant/media/{{ reclamation.preuve }}" target="_blank">ficher-{{ reclamation.id }}</a>
                             </td>

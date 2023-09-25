@@ -1,0 +1,33 @@
+{% extends 'base_admin.html' %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block main %}
+	<main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Cours</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active"><a href="{% url 'heure' %}">Heure</a></li> / <li>Modification</li>
+            </ol>
+            <div class="d-flex container">
+                <div class="w-50 me-3">
+                    {% if done %}
+                    	<div class="alert alert-success">
+                            <span>{{ done }}</span>
+                        </div>
+                    {% endif %}
+                    {% if err %}
+                    	<div class="alert alert-danger">
+                            <span>{{ err }}</span>
+                        </div>
+                    {% endif %}
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {{ form | crispy }}
+                        <button class="btn btn-secondary mt-3">Modifier</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

@@ -7,12 +7,12 @@
         <div class="container-fluid px-4">
             <h1 class="mt-4">Cours</h1>
             <ol class="breadcrumb mb-4">
-                <li class="breadcrumb-item active">cours</li>
+                <li class="breadcrumb-item active">Horaire</li>
             </ol>
             <div class="d-flex container">
-                <div class="w-50">
-                {% if cours %}
-                	<table class="table table-bordered w-75">
+                <div class="w-50 me-5">
+                {% if heures %}
+                	<table class="table table-bordered w-100">
                         <thead>
                             <tr>
                                 <th>Nom</th>
@@ -20,19 +20,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for cour in cours %}
+                            {% for heure in heures %}
                                 <tr>
-                                    <td class="w-25">{{ cour.nom }}</td>
-                                    <td class="w-75">
-                                        <a href="{% url 'alter_cours' cour.id %}" class="btn btn-success">Modifier</a>
-                                        <a href="{% url 'supp_cours' cour.id %}" class="btn btn-danger">Supprimer</a>
+                                    <td class="w-50">{{ heure.horaire }}</td>
+                                    <td class="w-50">
+                                        <a href="{% url 'alter_heure' heure.id %}" class="btn btn-success">Modifier</a>
+                                        <a onclick="return confirm('Etes vous sur de vouloir supprimer cet elemet');" href="{% url 'supprimer_heure' heure.id %}" class="btn btn-danger">Supprimer</a>
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 {% else %}
-                    <span class="display-3">Il n'y a aucun cours </span>
+                    <span class="display-3">Aucune heure n'est enregistre </span>
                 {% endif %}
 
                 </div>

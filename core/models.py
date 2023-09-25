@@ -6,7 +6,7 @@ from django.db import models
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
-            raise ValueError('Email address is required')
+            raise ValueError('Il faut un email')
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
@@ -49,7 +49,7 @@ class ProfileEtudiant(models.Model):
     prenom = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
     classe = models.CharField(max_length=255, blank=True)
-    id_empeinte = models.IntegerField()
+    id_empeinte = models.IntegerField(blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -76,16 +76,26 @@ etat = (
 )
 
 
+class Heure(models.Model):
+    horaire = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.horaire
+
+
 class Cours(models.Model):
-    nom_cours = models.CharField(max_length=255)
-    date_creation = models.DateField(auto_now_add=True)
+    nom = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nom
 
 
 class Reclamation(models.Model):
     motif = models.CharField(max_length=255)
     preuve = models.FileField(upload_to="Preuve")
     etudiant = models.ForeignKey(ProfileEtudiant, on_delete=models.CASCADE)
-    cours = models.CharField(max_length=255)
+    cours = models.ForeignKey(Cours, on_delete=models.CASCADE)
+    heure = models.ForeignKey(Heure, on_delete=models.CASCADE)
     dateDeCreation = models.DateField(auto_now_add=True)
     etat = models.CharField(max_length=255, choices=etat, default="En cours")
 

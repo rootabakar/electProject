@@ -16,22 +16,20 @@ def index(request):
 @login_required
 def ajouter(request):
     if request.method == 'POST':
-        motif = request.POST.get('motif')
-        cours = request.POST.get('cours')
-        preuve = request.FILES.get('preuve')
-        id_user = request.user.id
-        id_conv = int(id_user)
-        etudiant = ProfileEtudiant.objects.get(user_id=id_conv)
-        reclamation = Reclamation.objects.create(
-            motif=motif,
-            preuve=preuve,
-            etudiant=etudiant,
-            cours=cours
-        )
-        if reclamation:
+        form = ReclamationForm(request.POST, request.FILES)
+        if form.is_valid():
+            id_user = request.user.id
+            etudiant = ProfileEtudiant.objects.get(user_id=id_user)
+            form.instance.etudiant = etudiant
+            form.save()
+            form = ReclamationForm()
             done = "Reclamation envoye"
+            return render(request, 'etudiant/ajouter.html', locals())
         else:
             err = "ERRRRRRR"
+            return render(request, 'etudiant/ajouter.html', locals())
+    else:
+        form = ReclamationForm()
     return render(request, 'etudiant/ajouter.html', locals())
 
 
@@ -41,3 +39,16 @@ def supprimer(request, id):
     reclamation.delete()
     done_sup = "Reclamation supprimer avec succes !"
     return redirect("index_etudiant")
+
+
+def modifier(request, id):
+    reclamation = Reclamation.objects.get(id=id)
+    if request.method == 'POST':
+        form = ReclamationForm(request.POST, instance=reclamation)
+        if form.is_valid():
+            reclamation.save()
+            done = "Element modifier avec succes"
+            return render(request, 'etudiant/modifier.html', locals())
+        else:
+            err = "ERR LORS DE LA MODIFICATION"
+    return render(request, 'etudiant/modifier.html', locals())

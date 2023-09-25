@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block titre %}
+	ACCEUIL
+{% endblock %}
+
+
+{% block main %}
+
+    <div class="container p-4">
+        {% if done_sup %}
+        	<alert class="alert-success">{{ done_sup }}</alert>
+        {% endif %}
+        <h2>Modification</h2>
+        <form action="" method="post">
+            {{ form | crispy }}
+            <button class="btn btn-success mt-3" type="submit">Modifier</button>
+        </form>
+
+    </div>
+
+
+{% endblock %}

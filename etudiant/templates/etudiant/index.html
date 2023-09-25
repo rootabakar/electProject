@@ -8,15 +8,17 @@
 
 {% block main %}
 
-
     <div class="container p-4">
         {% if done_sup %}
         	<alert class="alert-success">{{ done_sup }}</alert>
         {% endif %}
         <h2>Liste des reclamations</h2>
-        <a href="{% url 'ajouter' %}" class="btn btn-primary mt-2 mb-2">Creer</a>
-        <table class="table table-bordered">
-            <thead>
+        <div class="mb-3">
+            <a href="{% url 'ajouter' %}" class="btn btn-primary mt-2 mb-2">Creer</a>
+        </div>
+        {% if reclamations %}
+            <table class="table table-bordered">
+                <thead>
                 <tr>
                     <th>Motif</th>
                     <th>Cours</th>
@@ -25,15 +27,15 @@
                     <th>Preuve</th>
                     <th>Action</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 {% for reclamation in reclamations %}
                     <tr>
                         <td>{{ reclamation.motif }}</td>
                         <td>{{ reclamation.cours }}</td>
                         <td>{{ reclamation.dateDeCreation }}</td>
-                        <td>
-                            <div class="bg-info text-white p-2">
+                        <td class="{% if reclamation.etat == 'En cours' %}bg-warning{% elif reclamation.etat == 'Accepter' %}bg-success{% elif reclamation.etat == 'Refuser' %}bg-danger{% endif %}">
+                            <div class="container">
                                 {{ reclamation.etat }}
                             </div>
                         </td>
@@ -41,12 +43,16 @@
                             <a href="media/{{ reclamation.preuve }}" target="_blank">ficher-{{ reclamation.id }}</a>
                         </td>
                         <td>
-                            <a href="{% url 'supprimer' reclamation.id %}" class="btn btn-danger">Supprimer</a>
+                            <a href="{% url 'supprimer' reclamation.id %}" class="btn btn-success">Modfier</a>
+                            <a onclick="return confirm('Etes vous sur de vouloir supprimer l\'element')" href="{% url 'supprimer' reclamation.id %}" class="btn btn-danger">Supprimer</a>
                         </td>
                     </tr>
                 {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        {% else %}
+            <span class="display-3">Vous n'avez aucune reclamation</span>
+        {% endif %}
     </div>
 
 

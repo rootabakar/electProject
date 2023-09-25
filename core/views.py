@@ -1,7 +1,8 @@
-from django.contrib.auth import get_user_model, authenticate, login
+from django.contrib.auth import get_user_model, authenticate, login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
-from core.forms import UserForm, CoursForm
-from core.models import User, ProfileEtudiant, Reclamation, Cours
+from core.forms import UserForm, CoursForm, HeureForm
+from core.models import User, ProfileEtudiant, Reclamation, Cours, Heure
 
 Utilisateur = get_user_model()
 
@@ -22,9 +23,7 @@ def creation_utilisateur(request):
         last_name = request.POST.get("last_name")
         email = request.POST.get("email")
         type_ = request.POST.get("type")
-        id_empreinte = request.POST.get("id_empeinte")
         password = request.POST.get("password")
-
         user_exist = User.objects.filter(email=email)
         if user_exist:
             err = "L'utilisateur existe deja"
@@ -36,17 +35,22 @@ def creation_utilisateur(request):
                 type=type_,
                 password=password
             )
-            ProfileEtudiant.objects.create(
-                nom=last_name,
-                prenom=first_name,
-                email=email,
-                classe="",
-                id_empeinte=20,
-                user=user_create
-            )
-            if user_create:
-                done = "Utilisateur creer avec succes !"
-    form = UserForm()
+            if type_ == "ETUDIANT":
+                id_empreinte = request.POST.get("id_empriente")
+                ProfileEtudiant.objects.create(
+                    nom=last_name,
+                    prenom=first_name,
+                    email=email,
+                    classe="",
+                    id_empeinte=id_empreinte,
+                    user=user_create
+                )
+                if user_create:
+                    done = "Utilisateur creer avec succes !"
+            else:
+                pass
+    else:
+        form = UserForm()
     return render(request, 'core/creation_utilisateur.html', locals())
 
 
@@ -76,15 +80,98 @@ def connexion(request):
                 return redirect('/etudiant/')
             else:
                 return redirect('/controller/')
+        else:
+            err = "ERR LORS DE LA CONNEXION"
+            return render(request, 'core/connexion.html', locals())
     return render(request, 'core/connexion.html', locals())
 
 
+def deconnexion(request):
+    logout(request)
+    return redirect('connexion')
+
+
 def cours(request):
+    cours = Cours.objects.all()
     if request.method == 'POST':
-        nom = request.POST.get("nom_cours")
-        Cours.objects.create(nom_cours=nom)
-        cours = Cours.objects.all()
-        done = "Cours ajouter avec succes !"
+        form = CoursForm(request.POST)
+        if form.is_valid():
+            form.save()
+            done = "Cours ajouter avec succes !"
+            return render(request, 'core/cours.html', locals())
+        else:
+            err = "ERR LORS DE LA CREATION DU COURS "
+            return render(request, 'core/cours.html', locals())
     else:
         form = CoursForm()
     return render(request, 'core/cours.html', locals())
+
+
+def supp_cours(request, id_supp):
+    id = int(id_supp)
+    cours = Cours.objects.get(id=id)
+    cours.delete()
+    return redirect('cours')
+
+
+def alter_cours(request, id):
+    cours = Cours.objects.get(id=id)
+    if request.method == 'POST':
+        form = CoursForm(request.POST, instance=cours)
+        if form.is_valid():
+            form.save()
+            done = "Element modifier avec succes"
+        else:
+            err = "Err lors de la modification"
+    else:
+        form = CoursForm(instance=cours)
+    return render(request, 'core/cours_alter.html', locals())
+
+
+def gestion_heure(request):
+    heures = Heure.objects.all()
+    form = HeureForm()
+    if request.method == 'POST':
+        form = HeureForm(request.POST)
+        if form.is_valid():
+            form.save()
+            done = "Element ajouter avec succes !"
+            form = HeureForm()
+            return render(request, 'core/heure.html', locals())
+        else:
+            err = "ERR LORS DE LA CREATION DE L'ELEMENT"
+            return render(request, 'core/heure.html', locals())
+    else:
+        form = HeureForm()
+    return render(request, 'core/heure.html', locals())
+
+
+def alter_heure(request, id):
+    heure = Heure.objects.get(id=id)
+    if request.method == 'POST':
+        form = HeureForm(request.POST, instance=heure)
+        if form.is_valid():
+            form.save()
+            done = "Element modifier avec succes"
+        else:
+            err = "Err lors de la modification"
+    else:
+        form = HeureForm(instance=heure)
+    return render(request, 'core/heure_alter.html', locals());
+
+
+def supp_heure(request, id):
+    Heure.objects.get(id=id).delete()
+    return redirect('heure')
+
+
+def prinpical(request):
+    return render(request, 'core/principal.html', locals())
+
+
+def presence(request):
+    return render(request, 'core/liste_presence.html', locals())
+
+
+def error_403_view(request, exception):
+    return render(request, 'core/403.html', status=403)
