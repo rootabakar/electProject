@@ -22,10 +22,6 @@
             <form action="" method="post">
                 {% csrf_token %}
                 {{ form | crispy }}
-                <div>
-                    <label for="id_empreinte" class="form-label">Id empreinte</label>
-                    <input type="number" class="form-control" name="id_empriente" id="id_empreinte">
-                </div>
                 <button class="btn btn-success mt-3" type="submit">Ajouter</button>
             </form>
 

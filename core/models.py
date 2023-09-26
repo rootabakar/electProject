@@ -100,3 +100,17 @@ class Reclamation(models.Model):
     etat = models.CharField(max_length=255, choices=etat, default="En cours")
 
 
+
+ETAT = (
+    ("Present", "Present"),
+    ("Absent", "Absent")
+)
+
+
+class Presence(models.Model):
+    heure = models.CharField(max_length=255, choices=heure)
+    etat = models.CharField(max_length=255, choices=ETAT, default="Absent")
+    etudiant = models.ForeignKey(ProfileEtudiant, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.id

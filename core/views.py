@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from core.forms import UserForm, CoursForm, HeureForm
-from core.models import User, ProfileEtudiant, Reclamation, Cours, Heure
+from core.models import User, ProfileEtudiant, Reclamation, Cours, Heure, Presence
 
 Utilisateur = get_user_model()
 
@@ -36,13 +36,12 @@ def creation_utilisateur(request):
                 password=password
             )
             if type_ == "ETUDIANT":
-                id_empreinte = request.POST.get("id_empriente")
                 ProfileEtudiant.objects.create(
                     nom=last_name,
                     prenom=first_name,
                     email=email,
                     classe="",
-                    id_empeinte=id_empreinte,
+                    id_empeinte=1,
                     user=user_create
                 )
                 if user_create:
@@ -170,6 +169,7 @@ def prinpical(request):
 
 
 def presence(request):
+    etudiants = ProfileEtudiant.objects.all()
     return render(request, 'core/liste_presence.html', locals())
 
 

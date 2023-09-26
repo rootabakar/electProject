@@ -8,7 +8,32 @@
                 <li class="breadcrumb-item active">Liste</li>
             </ol>
             <div class="d-flex container me-3">
+                {% if presences %}
 
+                    <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Heure</th>
+                            <th>Etat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for presence in presences %}
+                            <tr>
+                                <td>{{ presence.prenom }}</td>
+                                <td>{{ presence.nom }}</td>
+                                <td>{{ presence.heure }}</td>
+                                <td>{{ presence.etat }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% else %}
+                    <span class="display-3">La liste de presence est vide</span>
+                {% endif %}
             </div>
         </div>
     </main>
