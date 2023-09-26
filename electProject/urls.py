@@ -21,6 +21,7 @@ from core.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', prinpical, name="principal"),
+    path('err/', error_403_view, name="err"),
     path('connexion/', connexion, name="connexion"),
     path('deconnexion/', deconnexion, name="deconnexion"),
     path('controller/', include('core.urls')),
