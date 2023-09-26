@@ -32,6 +32,7 @@
                                 <td>{{ user.email }}</td>
                                 <td>
                                     <a href="{% url 'detail_utilisateur' user.id %}">Détails</a>
+                                    <a onclick="return confirm('Etes vous sur de vouloir dupprimer l\'utilisateur')" href="{% url 'supprimer_user' user.id %}" class="btn btn-danger mt-3 mb-3">Supprimer</a>
                                 </td>
                             </tr>
                         {% endfor %}

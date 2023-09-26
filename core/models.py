@@ -108,6 +108,8 @@ ETAT = (
 
 
 class Presence(models.Model):
+    prenom = models.CharField(max_length=255)
+    nom = models.CharField(max_length=255)
     heure = models.CharField(max_length=255, choices=heure)
     etat = models.CharField(max_length=255, choices=ETAT, default="Absent")
     etudiant = models.ForeignKey(ProfileEtudiant, on_delete=models.CASCADE)

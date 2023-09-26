@@ -19,7 +19,9 @@ urlpatterns = [
     path("heure/", gestion_heure, name="heure"),
     path("heure/alter/<int:id>", alter_heure, name="alter_heure"),
     path("heure/supprimer/<int:id>", supp_heure, name="supprimer_heure"),
+    path("supprimer/<int:id>/", supprimer_user, name="supprimer_user"),
     path("presence/", presence, name="presence"),
+
 ]
 
 

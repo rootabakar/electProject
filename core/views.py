@@ -3,20 +3,23 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect
 from core.forms import UserForm, CoursForm, HeureForm
 from core.models import User, ProfileEtudiant, Reclamation, Cours, Heure, Presence
+from core import utils
 
 Utilisateur = get_user_model()
 
-
+@login_required()
 def index(request):
+    user = User.objects.get(id=int (request.user.id))
+
     reclamations = Reclamation.objects.filter(etat="En cours")
     return render(request, 'core/index.html', locals())
 
-
+@login_required
 def gestion_utilisateur(request):
     users = User.objects.all()
     return render(request, 'core/utilisateur.html', locals())
 
-
+@login_required
 def creation_utilisateur(request):
     if request.method == 'POST':
         first_name = request.POST.get("first_name")
@@ -46,20 +49,21 @@ def creation_utilisateur(request):
                 )
                 if user_create:
                     done = "Utilisateur creer avec succes !"
+                    form = UserForm()
             else:
                 pass
     else:
         form = UserForm()
     return render(request, 'core/creation_utilisateur.html', locals())
 
-
+@login_required
 def detail_utilisateur(request, id):
     user = User.objects.get(id=id)
     etudiant = ProfileEtudiant.objects.get(user_id=id)
     reclamations = Reclamation.objects.filter(etudiant=etudiant)
     return render(request, 'core/detail_utilisateur.html', locals())
 
-
+@login_required
 def reclamation_view(request, id):
     valeur = request.POST.get("valeur")
     reclamation = Reclamation.objects.get(id=id)
@@ -69,19 +73,26 @@ def reclamation_view(request, id):
 
 
 def connexion(request):
-    if request.method == 'POST':
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        user = authenticate(email=email, password=password)
-        if user:
-            login(request, user)
-            if user.type == 'ETUDIANT':
-                return redirect('/etudiant/')
-            else:
-                return redirect('/controller/')
+    if request.user.is_authenticated:
+        user = User.objects.get(id=int(request.user.id))
+        if user.type == 'ETUDIANT':
+            return redirect("/etudiant/")
         else:
-            err = "ERR LORS DE LA CONNEXION"
-            return render(request, 'core/connexion.html', locals())
+            return redirect("/controller/")
+    else:
+        if request.method == 'POST':
+            email = request.POST.get("email")
+            password = request.POST.get("password")
+            user = authenticate(email=email, password=password)
+            if user:
+                login(request, user)
+                if user.type == 'ETUDIANT':
+                    return redirect('/etudiant/')
+                else:
+                    return redirect('/controller/')
+            else:
+                err = "ERR LORS DE LA CONNEXION"
+                return render(request, 'core/connexion.html', locals())
     return render(request, 'core/connexion.html', locals())
 
 
@@ -89,7 +100,7 @@ def deconnexion(request):
     logout(request)
     return redirect('connexion')
 
-
+@login_required
 def cours(request):
     cours = Cours.objects.all()
     if request.method == 'POST':
@@ -105,14 +116,14 @@ def cours(request):
         form = CoursForm()
     return render(request, 'core/cours.html', locals())
 
-
+@login_required
 def supp_cours(request, id_supp):
     id = int(id_supp)
     cours = Cours.objects.get(id=id)
     cours.delete()
     return redirect('cours')
 
-
+@login_required
 def alter_cours(request, id):
     cours = Cours.objects.get(id=id)
     if request.method == 'POST':
@@ -126,7 +137,7 @@ def alter_cours(request, id):
         form = CoursForm(instance=cours)
     return render(request, 'core/cours_alter.html', locals())
 
-
+@login_required
 def gestion_heure(request):
     heures = Heure.objects.all()
     form = HeureForm()
@@ -144,7 +155,7 @@ def gestion_heure(request):
         form = HeureForm()
     return render(request, 'core/heure.html', locals())
 
-
+@login_required
 def alter_heure(request, id):
     heure = Heure.objects.get(id=id)
     if request.method == 'POST':
@@ -158,20 +169,33 @@ def alter_heure(request, id):
         form = HeureForm(instance=heure)
     return render(request, 'core/heure_alter.html', locals());
 
-
+@login_required
 def supp_heure(request, id):
     Heure.objects.get(id=id).delete()
     return redirect('heure')
 
 
 def prinpical(request):
+    #utils.add_presence(1, "10:00 - 12:00", False)
+    if request.user.is_authenticated:
+        user = User.objects.get(id=int(request.user.id))
+        if user.type == 'ETUDIANT':
+            return redirect("/etudiant/")
+        else:
+            return redirect("/controller/")
     return render(request, 'core/principal.html', locals())
 
-
+@login_required
 def presence(request):
-    etudiants = ProfileEtudiant.objects.all()
+    presences = Presence.objects.all()
     return render(request, 'core/liste_presence.html', locals())
 
 
 def error_403_view(request, exception):
     return render(request, 'core/403.html', status=403)
+
+@login_required
+def supprimer_user(request, id):
+    id_user = int(id)
+    User.objects.get(id=id_user).delete()
+    return redirect("gestion_utilisateur")
